@@ -24,16 +24,16 @@ function setup() {
 function draw() {
   background(220);
   if (!imageSaved) {
-    pointImg(container);
-    saveHiddenCanvasAsImage(container);
+    pointImg(container); 
+    saveImage(container); 
     imageSaved = true;
   }
-
+  
   //image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
 
 }
 
-function saveHiddenCanvasAsImage(canvas) {
+function saveImage(canvas) {
   canvas.save('myImg.jpg');
 }
 
