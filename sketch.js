@@ -2,7 +2,7 @@
 let img;
 
 //Let's make an object to hold the draw properties of the image
-let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0};
+let imgDrwPrps = { aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0 };
 
 //A variable for the canvas aspect ratio
 let canvasAspectRatio = 0;
@@ -22,7 +22,7 @@ function draw() {
   background(220);
   pointImg();
   //image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
-  
+
 }
 
 function windowResized() {
@@ -59,12 +59,21 @@ function calculateImageDrawProps() {
 }
 
 function pointImg() {
-  for (let col= 0; col <= img.width; col+= 10){
-    for (let row = 0; row <= img.height; row+=10){
-      let c = img.get(col,row);
+  for (let col = 0; col <= img.width; col += 2) {
+    for (let row = 0; row <= img.height; row += 2) {
+      let xPos = col;
+      let yPos = row;
+      let c = img.get(xPos, yPos);
+      push();
+      translate(xPos, yPos);
+      rotate(radians(random(360)));
+      noFill();
       stroke(color(c));
-      strokeWeight(10);
-      point(col,row);
+      strokeWeight(random(5));
+      point(xPos, yPos);
+      strokeWeight(random(3));
+      curve(xPos, yPos, sin(xPos) * random(60), cos(xPos) * sin(xPos) * random(90), random(10), random(80), cos(yPos) * sin(yPos) * random(140), cos(xPos) * sin(xPos) * 50);
+      pop();
     }
   }
 }
