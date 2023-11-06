@@ -1,6 +1,7 @@
 let color1, color2, color3;
 let time = 0; //Use to track the diff time of the day
 let canvaColor;
+let waterRipples = [];
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -10,21 +11,27 @@ function setup() {
   color2 = color(102, 43, 59);
   color3 = color(50, 30, 40);
   canvaColor = color(0, 0, 0);
+
+  for (let i = 0; i < 20; i++) {
+    waterRipples.push(new waterRipple(random(0, width * 0.8), random(height * 0.6, height * 0.9), random(20, 70)));
+  }
 }
 
 function draw() {
   background(canvaColor);
   time += 1;
-  drawSky(); 
-  drawWaterReflct();
-  drawTower();
-  
   updateCanvaColor();
+  drawSky();
+  drawWaterReflct();
+  drawWaterRipple()
+  drawTower();
 }
 
 function drawSky() {
+  push();
   rotateX(85);
   translate(0, 0, -40);
+
   for (var i = 0; i < 100; i++) {
     beginShape();
     for (var j = 0; j < 360; j += 10) {
@@ -45,12 +52,14 @@ function drawSky() {
     }
     endShape(CLOSE);
   }
+  pop();
 }
 
 function drawWaterReflct() {
   push();
+  rotateX(92);
   translate(0, 0, 100);
-  rotateX(7);
+
   for (var i = 0; i < 100; i++) {
     beginShape();
     for (var j = 0; j < 360; j += 10) {
@@ -71,11 +80,15 @@ function drawWaterReflct() {
     }
     endShape(CLOSE);
   }
+  pop();
 }
 
 function drawTower() {
   fill(120, 75, 50);
   push();
+  rotateX(92);
+  translate(0, 200, 50);
+  scale(0.5);
   beginShape();
   for (let y = -130; y <= 75; y += 10) {
     let lerpedColor;
@@ -109,6 +122,16 @@ function drawTower() {
 
 }
 
+function drawWaterRipple() {
+  push();
+  translate(-400, 0, 0);
+  for (let ripple of waterRipples) {
+    ripple.update();
+    ripple.display();
+  }
+  pop();
+}
+
 function updateCanvaColor() {
   let myColor = map(sin(time), -1, 1, 0, 255);
   canvaColor = color(myColor, myColor, myColor);
@@ -116,4 +139,30 @@ function updateCanvaColor() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+}
+
+class waterRipple {
+  constructor(x, y, radius) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.alpha = 255;
+  }
+
+  update() {
+    this.radius += 1;
+    this.alpha -= 2;
+    if (this.alpha <= 0) {
+      this.radius = 0;
+      this.alpha = 255;
+      this.x = random(width);
+      this.y = random(height);
+    }
+  }
+
+  display() {
+    noFill();
+    stroke(0, 150, 255, this.alpha);
+    ellipse(this.x, this.y, this.radius, this.radius);
+  }
 }
