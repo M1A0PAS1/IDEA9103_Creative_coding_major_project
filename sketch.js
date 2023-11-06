@@ -20,7 +20,8 @@ function setup() {
 
 function draw() {
   background(220);
-  image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
+  pointImg();
+  //image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
   
 }
 
@@ -54,5 +55,16 @@ function calculateImageDrawProps() {
     imgDrwPrps.height = height;
     imgDrwPrps.xOffset = 0;
     imgDrwPrps.yOffset = 0;
+  }
+}
+
+function pointImg() {
+  for (let col= 0; col <= img.width; col++){
+    for (let raw = 0; raw <= img.height; raw++){
+      let c = img.get(col,raw);
+      stroke(color(c));
+      point(col,raw);
+
+    }
   }
 }
