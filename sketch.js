@@ -1,10 +1,10 @@
 let color1, color2, color3;
 let time = 0; //Use to track the diff time of the day
-let canvaColor;
-let waterRipples = [];
+let canvaColor;//Use to ctrl background color
+let waterRipples = [];//Use to store ripples
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(windowWidth, windowHeight, WEBGL);//Apply wbgl
   angleMode(DEGREES);
 
   color1 = color(32, 55, 69);
@@ -13,13 +13,13 @@ function setup() {
   canvaColor = color(0, 0, 0);
 
   for (let i = 0; i < 20; i++) {
-    waterRipples.push(new waterRipple(random(0, width * 0.8), random(height * 0.6, height * 0.9), random(20, 70)));
+    waterRipples.push(new waterRipple(random(0, width * 0.8), random(height * 0.6, height * 0.9), random(20, 70))); //Add randomness to ripples
   }
 }
 
 function draw() {
   background(canvaColor);
-  time += 1;
+  time += 1; //Ctrl time speed
   updateCanvaColor();
   drawSky();
   drawWaterReflct();
@@ -28,7 +28,7 @@ function draw() {
 }
 
 function drawSky() {
-  push();
+  push();//Use push and pop to avoid affect other objects
   rotateX(85);
   translate(0, 0, -40);
 
@@ -124,7 +124,7 @@ function drawTower() {
 
 function drawWaterRipple() {
   push();
-  translate(-400, 0, 0);
+  translate(-400, 0, 0); //Since on a 3d system, move to lhe left in x-axis to reach the real left side
   for (let ripple of waterRipples) {
     ripple.update();
     ripple.display();
@@ -132,9 +132,31 @@ function drawWaterRipple() {
   pop();
 }
 
+
+
 function updateCanvaColor() {
-  let myColor = map(sin(time), -1, 1, 0, 255);
-  canvaColor = color(myColor, myColor, myColor);
+  let whiteColor = color(255);
+  let duskColor = color(255, 204, 0);
+  let nightColor = color(0);
+
+  let dawnEnd = 200; //Where day ends
+  let duskStart = 600; //Where dusk start
+  let morningStart = 800;
+  let fullDay = 1000;
+
+  time = time % fullDay; //To make a loop
+
+  let currentColor;
+  if (time < dawnEnd) {
+    currentColor = lerpColor(whiteColor, duskColor, map(time, 0, dawnEnd, 0, 1)); //To lerp to smoothly change to dusk color
+  } else if (time >= dawnEnd && time < duskStart) {
+    currentColor = lerpColor(duskColor, nightColor, map(time, dawnEnd, duskStart, 0, 1));
+  } else if (time >= duskStart && time < morningStart) {
+    currentColor = lerpColor(nightColor, whiteColor, map(time, duskStart, morningStart, 0, 1));
+  } else {
+    currentColor = whiteColor;
+  }
+  canvaColor = currentColor; //Update canva color
 }
 
 function windowResized() {
@@ -150,9 +172,9 @@ class waterRipple {
   }
 
   update() {
-    this.radius += 1;
-    this.alpha -= 2;
-    if (this.alpha <= 0) {
+    this.radius += 1;//Make ripples grow
+    this.alpha -= 2; //Use transparency to make ripples disappear
+    if (this.alpha <= 0) {//Regenarte
       this.radius = 0;
       this.alpha = 255;
       this.x = random(width);
@@ -162,7 +184,7 @@ class waterRipple {
 
   display() {
     noFill();
-    stroke(0, 150, 255, this.alpha);
+    stroke(0, 150, 255, this.alpha); //Blue and nofill circle
     ellipse(this.x, this.y, this.radius, this.radius);
   }
 }
