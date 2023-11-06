@@ -1,18 +1,27 @@
+//We need a variable to hold our image
+let img;
+
 //Let's make an object to hold the draw properties of the image
 let imgDrwPrps = {aspect: 0, width: 0, height: 0, xOffset: 0, yOffset: 0};
 
 //A variable for the canvas aspect ratio
 let canvasAspectRatio = 0;
 
+//let's load the image from disk
+function preload() {
+  img = loadImage('/assets/Claude_Monet,_Saint-Georges_majeur_au_crépuscule.jpg');
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  imgDrwPrps.aspect = 2480 / 1578;
+  imgDrwPrps.aspect = img.width / img.height;
   calculateImageDrawProps();
 }
 
 function draw() {
   background(220);
+  image(img, imgDrwPrps.xOffset, imgDrwPrps.yOffset, imgDrwPrps.width, imgDrwPrps.height);
+  
 }
 
 function windowResized() {
