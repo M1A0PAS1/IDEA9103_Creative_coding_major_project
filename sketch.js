@@ -59,12 +59,12 @@ function calculateImageDrawProps() {
 }
 
 function pointImg() {
-  for (let col= 0; col <= img.width; col++){
-    for (let raw = 0; raw <= img.height; raw++){
-      let c = img.get(col,raw);
+  for (let col= 0; col <= img.width; col+= 10){
+    for (let row = 0; row <= img.height; row+=10){
+      let c = img.get(col,row);
       stroke(color(c));
-      point(col,raw);
-
+      strokeWeight(10);
+      point(col,row);
     }
   }
 }
