@@ -1,18 +1,29 @@
 let color1, color2, color3;
+let time = 0; //Use to track the diff time of the day
+let canvaColor;
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   angleMode(DEGREES);
 
-  color1 = color(32, 55, 69); 
-  color2 = color(102, 43, 59); 
-  color3 = color(50,30,40);
+  color1 = color(32, 55, 69);
+  color2 = color(102, 43, 59);
+  color3 = color(50, 30, 40);
+  canvaColor = color(0, 0, 0);
 }
 
 function draw() {
-  background(30);
-  rotateX(85);
+  background(canvaColor);
+  time += 1;
+  drawSky(); 
+  drawWaterReflct();
+  drawTower();
+  
+  updateCanvaColor();
+}
 
+function drawSky() {
+  rotateX(85);
   translate(0, 0, -40);
   for (var i = 0; i < 100; i++) {
     beginShape();
@@ -23,9 +34,9 @@ function draw() {
       var d = dist(0, 0, x, y);
       var interpColor;
       if (d <= 200) {
-        interpColor = lerpColor(color(196, 99, 85), color(189,120,51), map(d, 0, 200, 0, 1));
+        interpColor = lerpColor(color(196, 99, 85), color(189, 120, 51), map(d, 0, 200, 0, 1));
       } else {
-        interpColor = lerpColor(color(209,134,61), color(88,142,189), map(d, 200.1, 500, 0, 1));
+        interpColor = lerpColor(color(209, 134, 61), color(88, 142, 189), map(d, 200.1, 500, 0, 1));
       }
       stroke(interpColor);
       strokeWeight(2)
@@ -34,33 +45,38 @@ function draw() {
     }
     endShape(CLOSE);
   }
-
-translate(0, 0, 100);
-rotateX(7);
-for (var i = 0; i < 100; i++) {
-  beginShape();
-  for (var j = 0; j < 360; j += 10) {
-    var rad = i * 5;
-    var x = rad * cos(j);
-    var y = rad * sin(j);
-    var d = dist(0, 0, x, y);
-    var interpColor;
-    if (d <= 200) {
-      interpColor = lerpColor(color(196, 99, 85), color(220, 147, 47), map(d, 0, 200, 0, 1));
-    } else {
-      interpColor = lerpColor(color(220, 147, 47), color(69,106,162), map(d, 200.1, 500, 0, 1));
-    }
-    stroke(interpColor);
-    strokeWeight(2)
-    vertex(x, y);
-    noFill();
-  }
-  endShape(CLOSE);
 }
 
-fill(120, 75, 50);
+function drawWaterReflct() {
+  push();
+  translate(0, 0, 100);
+  rotateX(7);
+  for (var i = 0; i < 100; i++) {
+    beginShape();
+    for (var j = 0; j < 360; j += 10) {
+      var rad = i * 5;
+      var x = rad * cos(j);
+      var y = rad * sin(j);
+      var d = dist(0, 0, x, y);
+      var interpColor;
+      if (d <= 200) {
+        interpColor = lerpColor(color(196, 99, 85), color(220, 147, 47), map(d, 0, 200, 0, 1));
+      } else {
+        interpColor = lerpColor(color(220, 147, 47), color(69, 106, 162), map(d, 200.1, 500, 0, 1));
+      }
+      stroke(interpColor);
+      strokeWeight(2)
+      vertex(x, y);
+      noFill();
+    }
+    endShape(CLOSE);
+  }
+}
 
-beginShape();
+function drawTower() {
+  fill(120, 75, 50);
+  push();
+  beginShape();
   for (let y = -130; y <= 75; y += 10) {
     let lerpedColor;
     if (y < -30) {
@@ -87,10 +103,17 @@ beginShape();
     vertex(-200, 75, -50);
     vertex(-250, 75, -80);
     noStroke();
+  }
+  endShape(CLOSE);
+  pop();
+
 }
-endShape(CLOSE);
+
+function updateCanvaColor() {
+  let myColor = map(sin(time), -1, 1, 0, 255);
+  canvaColor = color(myColor, myColor, myColor);
 }
 
 function windowResized() {
-resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth, windowHeight);
 }
