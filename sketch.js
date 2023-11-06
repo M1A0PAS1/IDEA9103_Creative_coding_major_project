@@ -4,7 +4,8 @@ let canvaColor;//Use to ctrl background color
 let waterRipples = [];//Use to store ripples
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);//Apply wbgl
+  createCanvas(windowHeight / 455 * 828, windowHeight, WEBGL);//Apply wbgl
+  //windows size 828 455
   angleMode(DEGREES);
 
   color1 = color(32, 55, 69);
@@ -13,7 +14,7 @@ function setup() {
   canvaColor = color(0, 0, 0);
 
   for (let i = 0; i < 20; i++) {
-    waterRipples.push(new waterRipple(random(0, width * 0.8), random(height * 0.6, height * 0.9), random(20, 70))); //Add randomness to ripples
+    waterRipples.push(new waterRipple(random(0, width * 0.8), random(height * 0.6, height * 0.9), random(windowHeight/20, windowHeight/7))); //Add randomness to ripples
   }
 }
 
@@ -30,7 +31,7 @@ function draw() {
 function drawSky() {
   push();//Use push and pop to avoid affect other objects
   rotateX(85);
-  translate(0, 0, -40);
+  translate(0, 0, -windowHeight/11.375);
 
   for (var i = 0; i < 100; i++) {
     beginShape();
@@ -58,7 +59,7 @@ function drawSky() {
 function drawWaterReflct() {
   push();
   rotateX(92);
-  translate(0, 0, 100);
+  translate(0, 0, windowHeight/4.55);
 
   for (var i = 0; i < 100; i++) {
     beginShape();
@@ -87,34 +88,34 @@ function drawTower() {
   fill(120, 75, 50);
   push();
   rotateX(92);
-  translate(0, 200, 50);
+  translate(0, windowHeight/2.275, windowHeight/9.1);
   scale(0.5);
   beginShape();
-  for (let y = -130; y <= 75; y += 10) {
+  for (let y = -windowHeight/3.5; y <= windowHeight/3.5; y += windowHeight/45.5) {
     let lerpedColor;
-    if (y < -30) {
-      lerpedColor = lerpColor(color1, color2, map(y, -130, -30, 0, 1));
+    if (y < -windowHeight/15.167) {
+      lerpedColor = lerpColor(color1, color2, map(y, -windowHeight/3.5, -windowHeight/15.167, 0, 1));
     } else {
-      lerpedColor = lerpColor(color2, color3, map(y, -30, 75, 0, 1));
+      lerpedColor = lerpColor(color2, color3, map(y, -windowHeight/15.167, windowHeight/6.067, 0, 1));
     }
     fill(lerpedColor);
-    vertex(-260, 75, -130);
-    vertex(-10, 75, -130);
-    vertex(-15, 75, -100);
-    vertex(-30, 75, -80);
-    vertex(-60, 75, -80);
-    vertex(-70, 75, -65);
-    vertex(-85, 75, -50);
-    vertex(-100, 75, -50);
-    vertex(-105, 75, -10);
-    vertex(-130, 75, 0);
-    vertex(-140, 75, -10);
-    vertex(-140, 75, 50);
-    vertex(-150, 75, 70);
-    vertex(-165, 75, 50);
-    vertex(-170, 75, -10);
-    vertex(-200, 75, -50);
-    vertex(-250, 75, -80);
+    vertex(-windowHeight/1.75, windowHeight/6.067, -windowHeight/3.5);
+    vertex(-windowHeight/45.5, windowHeight/6.067, -windowHeight/3.5);
+    vertex(-windowHeight/30.3, windowHeight/6.067, -windowHeight/4.55);
+    vertex(-windowHeight/15.167, windowHeight/6.067, -windowHeight/5.6875);
+    vertex(-windowHeight/7.58, windowHeight/6.067, -windowHeight/5.6875);
+    vertex(-windowHeight/6.5, windowHeight/6.067, -windowHeight/7);
+    vertex(-windowHeight/5.35, windowHeight/6.067, -windowHeight/9.1);
+    vertex(-windowHeight/4.55, windowHeight/6.067, -windowHeight/9.1);
+    vertex(-windowHeight/4.33, windowHeight/6.067, -windowHeight/45.5);
+    vertex(-windowHeight/3.5, windowHeight/6.067, 0);
+    vertex(-windowHeight/3.25, windowHeight/6.067, -windowHeight/45.5);
+    vertex(-windowHeight/3.25, windowHeight/6.067, windowHeight/9.1);
+    vertex(-windowHeight/3.033, windowHeight/6.067, windowHeight/6.5);
+    vertex(-windowHeight/2.758, windowHeight/6.067, windowHeight/9.1);
+    vertex(-windowHeight/2.676, windowHeight/6.067, -windowHeight/45.5);
+    vertex(-windowHeight/2.275, windowHeight/6.067, -windowHeight/9.1);
+    vertex(-windowHeight/1.82, windowHeight/6.067, -windowHeight/5.6875);
     noStroke();
   }
   endShape(CLOSE);
@@ -124,7 +125,7 @@ function drawTower() {
 
 function drawWaterRipple() {
   push();
-  translate(-400, 0, 0); //Since on a 3d system, move to lhe left in x-axis to reach the real left side
+  translate(-windowHeight/1.1375, 0, 0); //Since on a 3d system, move to lhe left in x-axis to reach the real left side
   for (let ripple of waterRipples) {
     ripple.update();
     ripple.display();
@@ -161,6 +162,7 @@ function updateCanvaColor() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
+  //draw();
 }
 
 class waterRipple {
@@ -172,7 +174,7 @@ class waterRipple {
   }
 
   update() {
-    this.radius += 1;//Make ripples grow
+    this.radius += windowHeight/455;//Make ripples grow
     this.alpha -= 2; //Use transparency to make ripples disappear
     if (this.alpha <= 0) {//Regenarte
       this.radius = 0;
